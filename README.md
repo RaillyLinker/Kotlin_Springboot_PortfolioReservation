@@ -21,7 +21,7 @@
 
 1. 인증/인가 모듈 연동 설계<br>
    <br>
-![화면 캡처 2025-03-04 155326](https://github.com/user-attachments/assets/ce68acf6-b038-4100-a791-2f720eb9356a)
+   ![화면 캡처 2025-03-04 155326](https://github.com/user-attachments/assets/ce68acf6-b038-4100-a791-2f720eb9356a)
 
    인증/인가는 JWT 를 사용하였습니다.<br>
    사용자 본인 인증 수단으로 전화번호, 이메일 확인 로직을 적용 하였으며,<br>
@@ -30,11 +30,11 @@
    <br>
 2. 결제 모듈 연동 설계<br>
    <br>
-![payment drawio](https://github.com/user-attachments/assets/327f6360-0c62-4fb8-aacf-212097ae384e)
-![Payment](https://github.com/user-attachments/assets/3c3d00a2-2d1b-4860-a49f-f2ac9731680f)
-![화면 캡처 2025-03-04 163331](https://github.com/user-attachments/assets/0459bcfd-8670-4ab9-8693-bd5eb00fca8e)
+   ![payment drawio](https://github.com/user-attachments/assets/327f6360-0c62-4fb8-aacf-212097ae384e)
+   ![Payment](https://github.com/user-attachments/assets/3c3d00a2-2d1b-4860-a49f-f2ac9731680f)
+   ![화면 캡처 2025-03-04 163331](https://github.com/user-attachments/assets/0459bcfd-8670-4ab9-8693-bd5eb00fca8e)
 
-   실제 결제를 처리하는 결제 모듈을 분리하였습니다.<br>
+   위와 같이 실제 결제를 처리하는 결제 모듈을 분리하였습니다.<br>
    <br>
    결제 모듈에서는 PG 사, 은행 업무와 연동하여 실제로 현금의 흐름이 일어나는 것에 대한 처리를 담당하도록 하여,<br>
    <br>
@@ -45,8 +45,8 @@
    <br>
 4. 예약 서비스 설계<br>
    <br>
-![Reservation drawio](https://github.com/user-attachments/assets/710516c9-6a91-423e-b33a-14d615745fb0)
-![Rental_Reservation](https://github.com/user-attachments/assets/6eb9c7f7-26da-4fab-82eb-25a1d33ef90f)
+   ![Reservation drawio](https://github.com/user-attachments/assets/710516c9-6a91-423e-b33a-14d615745fb0)
+   ![Rental_Reservation](https://github.com/user-attachments/assets/6eb9c7f7-26da-4fab-82eb-25a1d33ef90f)
 
    예약 서비스는 위와 같은 알고리즘으로 구성되어 있습니다.<br>
    <br>
