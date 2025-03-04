@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link th:href="@{/for_global/font.css}"
+          href="../../static/for_global/font.css"
+          rel="stylesheet"/>
+    <link th:href="@{/home_page/home_page.css}"
+          href="../../static/home_page/home_page.css"
+          rel="stylesheet"/>
+
+    <script th:inline="javascript">
+        // Thymeleaf 변수 할당하기
+    </script>
+    <script th:src="@{/home_page/home_page.js}"
+            src="../../static/home_page/home_page.js">
+    </script>
+
+    <title>
+        AUTH
+    </title>
+</head>
+<body>
+<!-- 본문 작성 -->
+
+<div>
+    <img id="title_icon"
+         th:src="@{/for_global/title_icon.png}"
+         src="../../static/for_global/title_icon.png"
+         onclick="location.href='/'"
+         alt="타이틀 아이콘 이미지"/>
+    <h1 id="title_txt">
+        홈
+    </h1>
+</div>
+
+<hr/>
+
+<h2>
+    AUTH
+</h2>
+
+<h2>
+    시스템 정보
+</h2>
+
+<span>
+    구동 환경 프로필 : <span th:text="${viewModel.env}">dev</span>
+</span>
+
+<h2 th:if="${viewModel.showApiDocumentBtn}">
+    API 문서
+</h2>
+
+<button th:if="${viewModel.showApiDocumentBtn}"
+        id="go_to_swagger_btn"
+        type="button"
+        class="sample_btn"
+        onclick="location.href='/swagger-ui/index.html'">
+    API 문서로 이동
+</button>
+
+</body>
+</html>
