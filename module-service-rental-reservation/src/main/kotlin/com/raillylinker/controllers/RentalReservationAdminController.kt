@@ -211,7 +211,14 @@ class RentalReservationAdminController(
             example = "30"
         )
         @JsonProperty("cancelDeadlineMinute")
-        val cancelDeadlineMinute: Long
+        val cancelDeadlineMinute: Long,
+        @Schema(
+            description = "상품 상태 설명(예를 들어 손망실의 경우 now_reservable 이 false 이며, 이곳에 손망실 이유가 기재됩니다.)",
+            required = true,
+            example = "이상무"
+        )
+        @JsonProperty("productStateDesc")
+        val productStateDesc: String
     ) {
         enum class CurrencyCodeEnum {
             KRW, USD
@@ -410,7 +417,14 @@ class RentalReservationAdminController(
             example = "30"
         )
         @JsonProperty("cancelDeadlineMinute")
-        val cancelDeadlineMinute: Long
+        val cancelDeadlineMinute: Long,
+        @Schema(
+            description = "상품 상태 설명(예를 들어 손망실의 경우 now_reservable 이 false 이며, 이곳에 손망실 이유가 기재됩니다.)",
+            required = true,
+            example = "이상무"
+        )
+        @JsonProperty("productStateDesc")
+        val productStateDesc: String
     ) {
         enum class CurrencyCodeEnum {
             KRW, USD
@@ -1890,6 +1904,166 @@ class RentalReservationAdminController(
 
     // ----
     @Operation(
+        summary = "예약 연장 신청 승인 <Admin>",
+        description = "예약 연장 신청을 승인 합니다."
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200",
+                description = "정상 동작"
+            ),
+            ApiResponse(
+                responseCode = "204",
+                content = [Content()],
+                description = "Response Body 가 없습니다.<br>" +
+                        "Response Headers 를 확인하세요.",
+                headers = [
+                    Header(
+                        name = "api-result-code",
+                        description = "(Response Code 반환 원인) - Required<br>" +
+                                "1 : rentalProductReservationUid 에 해당하는 정보가 데이터베이스에 존재하지 않습니다.<br>" +
+                                "2 : 결제 확인 완료 아님 || 예약 신청 거부 = 대여 진행 상태가 아님<br>" +
+                                "3 : 상품 대여일이 도래하지 않았습니다.<br>" +
+                                "4 : 예약 연장 신청 상태가 아닙니다.<br>" +
+                                "5 : 이미 반납 확인된 상태입니다.",
+                        schema = Schema(type = "string")
+                    )
+                ]
+            ),
+            ApiResponse(
+                responseCode = "401",
+                content = [Content()],
+                description = "인증되지 않은 접근입니다."
+            )
+        ]
+    )
+    @PostMapping(
+        path = ["/rental-product-reservation/{rentalProductReservationUid}/rental-extend-apply"],
+        consumes = [MediaType.APPLICATION_JSON_VALUE],
+        produces = [MediaType.APPLICATION_JSON_VALUE]
+    )
+    @PreAuthorize("isAuthenticated() and (hasRole('ROLE_ADMIN'))")
+    @ResponseBody
+    fun postRentableProductStockReservationInfoRentalExtendApply(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @Parameter(hidden = true)
+        @RequestHeader("Authorization")
+        authorization: String?,
+        @Parameter(
+            name = "rentalProductReservationUid",
+            description = "rentalProductReservation 고유값",
+            example = "1"
+        )
+        @PathVariable("rentalProductReservationUid")
+        rentalProductReservationUid: Long,
+        @RequestBody
+        inputVo: PostRentableProductStockReservationInfoRentalExtendApplyInputVo
+    ): PostRentableProductStockReservationInfoRentalExtendApplyOutputVo? {
+        return service.postRentableProductStockReservationInfoRentalExtendApply(
+            httpServletResponse,
+            authorization!!,
+            rentalProductReservationUid,
+            inputVo
+        )
+    }
+
+    data class PostRentableProductStockReservationInfoRentalExtendApplyInputVo(
+        @Schema(description = "상태 변경 상세 설명", required = true, example = "이상무")
+        @JsonProperty("stateChangeDesc")
+        val stateChangeDesc: String
+    )
+
+    data class PostRentableProductStockReservationInfoRentalExtendApplyOutputVo(
+        @Schema(description = "reservationHistory 고유값", required = true, example = "1")
+        @JsonProperty("reservationHistoryUid")
+        val reservationHistoryUid: Long
+    )
+
+
+    // ----
+    @Operation(
+        summary = "예약 연장 신청 거부 <Admin>",
+        description = "예약 연장 신청을 거부 합니다."
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(
+                responseCode = "200",
+                description = "정상 동작"
+            ),
+            ApiResponse(
+                responseCode = "204",
+                content = [Content()],
+                description = "Response Body 가 없습니다.<br>" +
+                        "Response Headers 를 확인하세요.",
+                headers = [
+                    Header(
+                        name = "api-result-code",
+                        description = "(Response Code 반환 원인) - Required<br>" +
+                                "1 : rentalProductReservationUid 에 해당하는 정보가 데이터베이스에 존재하지 않습니다.<br>" +
+                                "2 : 결제 확인 완료 아님 || 예약 신청 거부 = 대여 진행 상태가 아님<br>" +
+                                "3 : 상품 대여일이 도래하지 않았습니다.<br>" +
+                                "4 : 예약 연장 신청 상태가 아닙니다.<br>" +
+                                "5 : 이미 반납 확인된 상태입니다.",
+                        schema = Schema(type = "string")
+                    )
+                ]
+            ),
+            ApiResponse(
+                responseCode = "401",
+                content = [Content()],
+                description = "인증되지 않은 접근입니다."
+            )
+        ]
+    )
+    @PostMapping(
+        path = ["/rental-product-reservation/{rentalProductReservationUid}/rental-extend-deny"],
+        consumes = [MediaType.APPLICATION_JSON_VALUE],
+        produces = [MediaType.APPLICATION_JSON_VALUE]
+    )
+    @PreAuthorize("isAuthenticated() and (hasRole('ROLE_ADMIN'))")
+    @ResponseBody
+    fun postRentableProductStockReservationInfoRentalExtendDeny(
+        @Parameter(hidden = true)
+        httpServletResponse: HttpServletResponse,
+        @Parameter(hidden = true)
+        @RequestHeader("Authorization")
+        authorization: String?,
+        @Parameter(
+            name = "rentalProductReservationUid",
+            description = "rentalProductReservation 고유값",
+            example = "1"
+        )
+        @PathVariable("rentalProductReservationUid")
+        rentalProductReservationUid: Long,
+        @RequestBody
+        inputVo: PostRentableProductStockReservationInfoRentalExtendDenyInputVo
+    ): PostRentableProductStockReservationInfoRentalExtendDenyOutputVo? {
+        return service.postRentableProductStockReservationInfoRentalExtendDeny(
+            httpServletResponse,
+            authorization!!,
+            rentalProductReservationUid,
+            inputVo
+        )
+    }
+
+    data class PostRentableProductStockReservationInfoRentalExtendDenyInputVo(
+        @Schema(description = "상태 변경 상세 설명", required = true, example = "이상무")
+        @JsonProperty("stateChangeDesc")
+        val stateChangeDesc: String
+    )
+
+    data class PostRentableProductStockReservationInfoRentalExtendDenyOutputVo(
+        @Schema(description = "reservationHistory 고유값", required = true, example = "1")
+        @JsonProperty("reservationHistoryUid")
+        val reservationHistoryUid: Long
+    )
+
+
+    // ----
+    @Operation(
         summary = "대여 가능 상품 예약 상태 테이블의 상세 설명 수정 <ADMIN>",
         description = "대여 가능 상품 예약 상태 테이블의 상세 설명을 수정 처리합니다.<br>" +
                 "한번 결정된 상태 코드는 변하지 않습니다."
@@ -1966,7 +2140,7 @@ class RentalReservationAdminController(
 
     // ----
     @Operation(
-        summary = "예약 취소 신청 <>",
+        summary = "예약 취소 신청 <Admin>",
         description = "예약 취소 신청을 합니다.<br>" +
                 "결제 확인 및 예약 신청 승인 처리가 전부 완료되기 전이라면 자동적으로 예약 취소 승인 처리가 됩니다."
     )
@@ -2007,7 +2181,7 @@ class RentalReservationAdminController(
         consumes = [MediaType.APPLICATION_JSON_VALUE],
         produces = [MediaType.APPLICATION_JSON_VALUE]
     )
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated() and (hasRole('ROLE_ADMIN'))")
     @ResponseBody
     fun postCancelProductReservation(
         @Parameter(hidden = true)
@@ -2055,7 +2229,7 @@ class RentalReservationAdminController(
 
     // ----
     @Operation(
-        summary = "예약 취소 신청 철회 <>",
+        summary = "예약 취소 신청 철회 <Admin>",
         description = "예약 취소 신청을 철회 합니다."
     )
     @ApiResponses(
@@ -2094,7 +2268,7 @@ class RentalReservationAdminController(
         consumes = [MediaType.APPLICATION_JSON_VALUE],
         produces = [MediaType.APPLICATION_JSON_VALUE]
     )
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated() and (hasRole('ROLE_ADMIN'))")
     @ResponseBody
     fun postCancelProductReservationCancel(
         @Parameter(hidden = true)
@@ -2126,7 +2300,7 @@ class RentalReservationAdminController(
 
     // ----
     @Operation(
-        summary = "개별 상품 조기 반납 신고 <>",
+        summary = "개별 상품 조기 반납 신고 <Admin>",
         description = "개별 상품에 대해 조기 반납 신고 처리를 합니다."
     )
     @ApiResponses(
@@ -2166,7 +2340,7 @@ class RentalReservationAdminController(
         consumes = [MediaType.APPLICATION_JSON_VALUE],
         produces = [MediaType.APPLICATION_JSON_VALUE]
     )
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated() and (hasRole('ROLE_ADMIN'))")
     @ResponseBody
     fun postRentableProductStockReservationInfoEarlyReturn(
         @Parameter(hidden = true)
@@ -2207,7 +2381,7 @@ class RentalReservationAdminController(
 
     // ----
     @Operation(
-        summary = "개별 상품 조기 반납 신고 취소 <>",
+        summary = "개별 상품 조기 반납 신고 취소 <Admin>",
         description = "개별 상품에 대해 조기 반납 신고 취소 처리를 합니다."
     )
     @ApiResponses(
@@ -2244,7 +2418,7 @@ class RentalReservationAdminController(
         consumes = [MediaType.APPLICATION_JSON_VALUE],
         produces = [MediaType.APPLICATION_JSON_VALUE]
     )
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated() and (hasRole('ROLE_ADMIN'))")
     @ResponseBody
     fun postRentableProductStockReservationInfoEarlyReturnCancel(
         @Parameter(hidden = true)
@@ -2285,7 +2459,7 @@ class RentalReservationAdminController(
 
     // ----
     @Operation(
-        summary = "예약 연장 신청 <>",
+        summary = "예약 연장 신청 <Admin>",
         description = "예약 연장 신청을 합니다."
     )
     @ApiResponses(
@@ -2326,7 +2500,7 @@ class RentalReservationAdminController(
         consumes = [MediaType.APPLICATION_JSON_VALUE],
         produces = [MediaType.APPLICATION_JSON_VALUE]
     )
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated() and (hasRole('ROLE_ADMIN'))")
     @ResponseBody
     fun postRentableProductStockReservationInfoRentalExtend(
         @Parameter(hidden = true)
@@ -2374,7 +2548,7 @@ class RentalReservationAdminController(
 
     // ----
     @Operation(
-        summary = "예약 연장 신청 취소 <>",
+        summary = "예약 연장 신청 취소 <Admin>",
         description = "예약 연장 신청을 취소 합니다."
     )
     @ApiResponses(
@@ -2413,7 +2587,7 @@ class RentalReservationAdminController(
         consumes = [MediaType.APPLICATION_JSON_VALUE],
         produces = [MediaType.APPLICATION_JSON_VALUE]
     )
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated() and (hasRole('ROLE_ADMIN'))")
     @ResponseBody
     fun postRentableProductStockReservationInfoRentalExtendCancel(
         @Parameter(hidden = true)
