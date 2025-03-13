@@ -17,7 +17,7 @@
   <br>
   프로젝트를 무단으로 사용하여 일어난 모든 피해에 대해선 사용자 본인이 감당해야만 합니다.
 
-## 프로젝트 설계
+## 소프트웨어 설계
 
 1. 인증/인가 모듈 연동 설계<br>
    <br>
@@ -70,6 +70,6 @@
    Rest API 입출력 DTO 를 직관성 있게 설계하였고, 이를 Swagger API 문서를 통하여 배포하도록 처리하였습니다.<br>
    <br>
 6. 이외 JPA 를 사용한 ORM 장점의 극대화, Spring Security 를 통한 인증/인가 처리 분리, 모듈화를 통한 깔끔한 구조, 통일성 있고 관심사별 분리된 코딩 방식 등은,<br>
-   Github 에 공개된 게시판 포트폴리오(https://github.com/RaillyLinker/Kotlin_Springboot_PortfolioBoard)와 동일합니다.<br>
+   Github 에 공개된 게시판 포트폴리오( https://github.com/RaillyLinker/Kotlin_Springboot_PortfolioBoard )와 동일합니다.<br>
    <br>
 7. 여러 서비스에서 자주 사용되는 예약 시스템의 범용적이며 근본적인 기능들을 이와 같이 작성해 두었으므로, 추후 예약이라는 기능이 들어가는 모든 프로젝트에 재활용이 가능합니다.<br>
