@@ -1,8 +1,0 @@
-spring:
-  config:
-    activate:
-      on-profile: port11000
-
-server:
-  # 포트번호
-  port: 11000
